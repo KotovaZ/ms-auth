@@ -5,11 +5,10 @@ namespace App\Auth\Session;
 use App\Auth\User\UserServiceInterface;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\PermissionDenied;
-use Illuminate\Support\Facades\Cache;
 
 class SessionService implements SessionServiceInterface
 {
-    public function __construct(private UserServiceInterface $userService)
+    public function __construct(private UserServiceInterface $userService, private SessionRepositoryInterface $sessionRepository)
     {
     }
 
@@ -18,7 +17,7 @@ class SessionService implements SessionServiceInterface
         foreach ($users as $login) {
             $user = $this->userService->get($login);
             if (empty($user))
-                throw new NotFoundException("ПОльзователь не зарегистрирован в системе");
+                throw new NotFoundException("Пользователь не зарегистрирован в системе");
         }
 
         return $this->saveSession($users);
@@ -26,14 +25,13 @@ class SessionService implements SessionServiceInterface
 
     public function get(string $id): array
     {
-        $data = Cache::get($id);
+        $data = $this->sessionRepository->get($id);
         if (empty($data)) {
             throw new NotFoundException("Сессия не зарегистрирована");
         }
 
-        return json_decode($data, true);
+        return $data;
     }
-
 
     public function authenticate(string $sessionId, string $login, string $password): string
     {
@@ -47,17 +45,6 @@ class SessionService implements SessionServiceInterface
 
     private function saveSession($players): string
     {
-        $gameId = $this->guid();
-        Cache::set($gameId, json_encode($players));
-        return $gameId;
-    }
-
-    private function guid($data = null): string
-    {
-        $data = $data ?? random_bytes(16);
-        assert(strlen($data) == 16);
-        $data[6] = chr(ord($data[6]) & 0x0f | 0x40);
-        $data[8] = chr(ord($data[8]) & 0x3f | 0x80);
-        return vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split(bin2hex($data), 4));
+        return $this->sessionRepository->save($players);
     }
 }

@@ -10,14 +10,17 @@ class UserService implements UserServiceInterface
 {
     private array $userList = [
         'user1' => [
+            'login' => 'user1',
             'pass' => '1234',
             'name' => 'Peter'
         ],
         'user2' => [
+            'login' => 'user2',
             'pass' => '1111',
             'name' => 'John'
         ],
         'user3' => [
+            'login' => 'user3',
             'pass' => '0000',
             'name' => 'Joey'
         ]

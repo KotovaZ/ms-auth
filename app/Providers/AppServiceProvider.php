@@ -6,6 +6,8 @@ use App\Auth\Session\SessionService;
 use App\Auth\Session\SessionServiceInterface;
 use App\Auth\JWT\JWTServiceInterface;
 use App\Auth\JWT\RS256Service;
+use App\Auth\Session\SessionRepository;
+use App\Auth\Session\SessionRepositoryInterface;
 use App\Auth\User\UserService;
 use App\Auth\User\UserServiceInterface;
 use Illuminate\Support\ServiceProvider;
@@ -32,6 +34,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             SessionServiceInterface::class,
             SessionService::class
+        );
+
+        $this->app->bind(
+            SessionRepositoryInterface::class,
+            SessionRepository::class
         );
     }
 
