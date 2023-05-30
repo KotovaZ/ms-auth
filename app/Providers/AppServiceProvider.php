@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Auth\Session\SessionService;
+use App\Auth\Session\SessionServiceInterface;
 use App\Auth\JWT\JWTServiceInterface;
 use App\Auth\JWT\RS256Service;
 use App\Auth\User\UserService;
@@ -25,6 +27,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             UserServiceInterface::class,
             UserService::class
+        );
+
+        $this->app->bind(
+            SessionServiceInterface::class,
+            SessionService::class
         );
     }
 
