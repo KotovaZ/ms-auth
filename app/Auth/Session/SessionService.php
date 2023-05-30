@@ -5,7 +5,6 @@ namespace App\Auth\Session;
 use App\Auth\User\UserServiceInterface;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\PermissionDenied;
-use Exception;
 use Illuminate\Support\Facades\Cache;
 
 class SessionService implements SessionServiceInterface
@@ -43,7 +42,7 @@ class SessionService implements SessionServiceInterface
             throw new PermissionDenied("Доступ запрещен");
         }
 
-        return $this->userService->authenticate($login, $password);
+        return $this->userService->authenticate($login, $password, ['session' => $sessionId]);
     }
 
     private function saveSession($players): string

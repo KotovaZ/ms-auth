@@ -27,7 +27,7 @@ class UserService implements UserServiceInterface
     {
     }
 
-    public function authenticate(string $login, string $password): string
+    public function authenticate(string $login, string $password, array $initialPayload = []): string
     {
         if (!isset($this->userList[$login])) {
             throw new NotFoundException("Пользоватлеь не найден", 404);
@@ -37,12 +37,13 @@ class UserService implements UserServiceInterface
             throw new BadRequest("Неверный пароль", 400);
         }
 
-        return $this->jwtService->encode($this->getJwtPayload($login));
+        return $this->jwtService->encode($this->getJwtPayload($login, $initialPayload));
     }
 
-    private function getJwtPayload(string $login): array
+    private function getJwtPayload(string $login, array $initialPayload): array
     {
         return [
+            ...$initialPayload,
             'username' => $this->userList[$login]['name']
         ];
     }
