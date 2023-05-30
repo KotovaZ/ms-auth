@@ -46,4 +46,13 @@ class UserService implements UserServiceInterface
             'username' => $this->userList[$login]['name']
         ];
     }
+
+    public function get(string $login): ?UserInterface
+    {
+        if ($userData = $this->userList[$login]) {
+            return new User($userData);
+        }
+
+        return null;
+    }
 }
