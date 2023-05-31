@@ -45,9 +45,12 @@ class UserService implements UserServiceInterface
 
     private function getJwtPayload(string $login, array $initialPayload): array
     {
+        $userData = $this->userList[$login];
+
         return [
             ...$initialPayload,
-            'username' => $this->userList[$login]['name']
+            'name' => $userData['name'],
+            'login' => $userData['login'],
         ];
     }
 
